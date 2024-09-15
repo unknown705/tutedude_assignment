@@ -38,7 +38,9 @@ export const registerUser = async (req: Request, res: Response) => {
 
     const user = await User.create({ username, password, hobbies });
     user.save();
-    const newUser = await User.findById(user._id).select("-password");
+    const newUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    );
     res.status(201).json({ success: true, user: newUser });
   } catch (error: any) {
     console.log(error);
@@ -129,7 +131,7 @@ export const addFriend = async (req: Request, res: Response) => {
         .json({ success: false, message: "Friend not found" });
     }
 
-    if (user._id === friendId) {
+    if (user.id === friendId) {
       return res
         .status(400)
         .json({ success: false, message: "Cannot add yourself" });

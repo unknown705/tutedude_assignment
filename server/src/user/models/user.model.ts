@@ -4,8 +4,7 @@ import jwt from "jsonwebtoken";
 
 export interface IUser extends Document {
   _id: string;
-  name: string;
-  email: string;
+  username: string;
   password: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -18,14 +17,10 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
-    name: {
+    username: {
       type: String,
-      required: [true, "Please provide a name"],
-    },
-    email: {
-      type: String,
-      required: [true, "Please provide an email"],
       unique: true,
+      required: [true, "Please provide a name"],
     },
     password: {
       type: String,
@@ -37,7 +32,6 @@ const userSchema = new Schema<IUser>(
     },
     refreshToken: {
       type: String,
-      default: "",
     },
   },
   { timestamps: true }
@@ -58,7 +52,7 @@ userSchema.methods.matchPassword = async function (enteredPassword: string) {
 
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
-    { _id: this.id, name: this.name, email: this.email },
+    { _id: this.id, username: this.username },
     process.env.ACCESS_TOKEN_SECRET!,
     {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
