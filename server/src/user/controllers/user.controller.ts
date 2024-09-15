@@ -41,6 +41,8 @@ export const registerUser = async (req: Request, res: Response) => {
     const newUser = await User.findById(user._id).select(
       "-password -refreshToken"
     );
+    console.log("User register with id:", user.id);
+
     res.status(201).json({ success: true, user: newUser });
   } catch (error: any) {
     console.log(error);
@@ -80,6 +82,8 @@ export const loginUser = async (req: Request, res: Response) => {
     const options = {
       httpOnly: true,
     };
+    console.log("User login with id:", user.id);
+
     secure: process.env.NODE_ENV === "production",
       res
         .status(200)
@@ -99,6 +103,7 @@ export const logoutUser = async (req: Request, res: Response) => {
     const user = req.user;
     user.refreshToken = "";
     await user.save({ validateBeforeSave: false });
+    console.log("User logout with id:", user.id);
 
     res
       .status(200)
@@ -153,11 +158,31 @@ export const addFriend = async (req: Request, res: Response) => {
     });
     friendship.save();
 
+    console.log("Friendship created with id:", friendship.id);
+
     res.status(201).json({ success: true, friendship });
   } catch (error: any) {
     console.log(error);
 
     res.status(400).json({ error: error.message });
+  }
+};
+
+export const getAllUser = async (req: Request, res: Response) => {
+  try {
+    //@ts-ignore
+    const user = req.user;
+
+    const users = await User.find({ _id: { $ne: user._id } }).select(
+      "-password -refreshToken"
+    );
+
+    console.log("User get all users with id:", user.id);
+
+    return res.status(200).json({ success: true, users });
+  } catch (error: any) {
+    console.log("Error getting all users", error.message);
+    return res.status(400).json({ error: error.message });
   }
 };
 
@@ -169,6 +194,8 @@ export const getFriends = async (req: Request, res: Response) => {
     const friendships = await Friendship.find({ user: user._id }).populate(
       "friend"
     );
+    console.log("User get friends with id:", user.id);
+
     res.status(200).json({ success: true, friendships });
   } catch (error: any) {
     console.log(error);
@@ -199,6 +226,8 @@ export const removeFriend = async (req: Request, res: Response) => {
         .json({ success: false, message: "Friendship not found" });
     }
 
+    console.log("Friendship removed with id:", friendship.id);
+
     res.status(200).json({ success: true });
   } catch (error: any) {
     console.log(error);
@@ -216,6 +245,8 @@ export const getFriendRequests = async (req: Request, res: Response) => {
       friend: user._id,
       status: "pending",
     }).populate("user");
+    console.log("User get friend requests with id:", user.id);
+
     res.status(200).json({ success: true, friendRequests });
   } catch (error: any) {
     console.log(error);
@@ -246,6 +277,8 @@ export const acceptFriendRequest = async (req: Request, res: Response) => {
         .status(400)
         .json({ success: false, message: "Friendship not found" });
     }
+
+    console.log("User accept friend request of user with id:", userId);
 
     res.status(200).json({ success: true });
   } catch (error: any) {
@@ -278,6 +311,8 @@ export const rejectFriendRequest = async (req: Request, res: Response) => {
         .json({ success: false, message: "Friendship not found" });
     }
 
+    console.log("User reject friend request of user with id:", userId);
+
     res.status(200).json({ success: true });
   } catch (error: any) {
     console.log(error);
@@ -306,6 +341,11 @@ export const getRecommendedFriendsWithMutualFriend = async (
       .populate("friend")
       .populate("user");
 
+    console.log(
+      "User get recommended friends with mutual friend with id:",
+      user.id
+    );
+
     res.status(200).json({ success: true, recommendedFriends });
   } catch (error: any) {
     console.log(error);
@@ -333,6 +373,11 @@ export const getRecommendedFriendsWithMutualHobbies = async (
       hobbies: { $in: userHobbies },
       _id: { $nin: userFriends },
     });
+
+    console.log(
+      "User get recommended friends with mutual hobbies with id:",
+      user.id
+    );
 
     res.status(200).json({ success: true, recommendedFriends });
   } catch (error: any) {

@@ -24,17 +24,11 @@ const LoginForm = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      const res = await axios.post(`${backendUrl}/api/customers/login`, data);
+      const res = await axios.post(`${backendUrl}/api/user/login`, data);
       if (res.data.success) {
         // dispatch(login(res.data));
         // login(res.data.accessToken, res.data.refreshToken);
-
-        localStorage.setItem("isAdmin", res.data.customer.isAdmin);
-        if (res.data.customer.isAdmin) {
-          navigator("/admin/overview");
-        } else {
-          navigator("/");
-        }
+        navigator("/");
       }
     } catch (error: any) {
       console.error("Login error:", error.message);

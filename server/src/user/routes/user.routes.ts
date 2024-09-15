@@ -11,6 +11,7 @@ import {
   rejectFriendRequest,
   getRecommendedFriendsWithMutualFriend,
   getRecommendedFriendsWithMutualHobbies,
+  getAllUser,
 } from "../controllers/user.controller";
 import verifyUser from "../middlewares/verifyUser";
 
@@ -30,6 +31,9 @@ userRoutes.delete("/friend/remove", verifyUser, removeFriend);
 userRoutes.get("/friend/requests", verifyUser, getFriendRequests);
 userRoutes.post("/friend/requests/accept", verifyUser, acceptFriendRequest);
 userRoutes.post("/friend/requests/reject", verifyUser, rejectFriendRequest);
+
+// general routes
+userRoutes.get("/getall", verifyUser, getAllUser);
 
 // Recommendation routes
 userRoutes.get(
