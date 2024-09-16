@@ -26,7 +26,7 @@ import { backendUrl } from "../../App";
 //   avatar: "https://i.pravatar.cc/300", // Placeholder image URL
 // };
 
-const link = ["overview", "products", "orders"];
+const link = ["", "friends", "profile"];
 
 const icons = [<InboxIcon />, <MailIcon />, <MdOutlineMenu />];
 
@@ -85,13 +85,13 @@ export default function SideBarAdmin() {
         <div className="flex flex-row items-center gap-2 sm:gap-2 md:gap-4 xl:gap-4 h-12 m-2">
           {/* <img src={LogoC} alt="" height={30} width={30} /> */}
           <h1 className=" text-xs font-bold  text-center text-primary font-sans md:text-xl lg:text-xl">
-            Laxmi Crate Industries
+            Fellow Friend
           </h1>
         </div>
       </Link>
       <Divider />
       <List>
-        {["Overview", "Products", "Orders"].map((text, index) => (
+        {["Overview", "Friends", "Profile"].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton onClick={() => handleRedirection(index)}>
               <ListItemIcon>{icons[index]}</ListItemIcon>
